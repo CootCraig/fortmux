@@ -1,0 +1,53 @@
+#!/usr/bin/env ruby
+
+require "ruby-debug"
+require "rubygems"
+require "thor"
+require 'pp'
+
+# ../lib
+$:.unshift File.join(File.dirname(File.dirname(File.expand_path(__FILE__))),'lib')
+
+require "FortMux"
+
+# logger = Logger.new('foo.log', 10, 1024000)
+module FortMux
+  class Cli < Thor
+    desc "load config", "Load config from ~/.fortmux/{config}.yaml into tmux"
+    method_option :execute, :type => :boolean, :default => true, :aliases => "-x"
+    method_option :log, :type => :boolean, :default => true, :aliases => "-l"
+    def load(config_name=nil)
+      if config_name
+        FortMux::Log::logger "fortmux load #{config_name} execute=#{options.execute?} log=#{options.log?}"
+        FortMux::Log::off unless options.log?
+        begin
+          FortMux::load config_name, :execute => options.execute?
+        rescue => ex
+          puts ex.message
+          FortMux::Log::logger ex.message
+        end
+      else
+        help
+      end
+    end
+
+    desc "list","List the config files"
+    def list
+      config_files = FortMux::config_files
+      if config_files.length == 0
+        puts "No config files."
+      else
+        config_files.sort.each {|c| puts c}
+      end
+    end
+
+    desc "status","Print the current status of the local tmux server."
+    def status
+      tmux_status = FortMux::Status.new
+      puts "tmux status"
+      PP.pp tmux_status.sessions
+    end
+  end
+end
+FortMux::Cli.start
+
