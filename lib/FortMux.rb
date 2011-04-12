@@ -21,6 +21,41 @@ module FortMux
         sio.string
       end
       FortMux::Log::logger msg
+
+      cmd_out = `tmux start-server` # Assuming no harm if server is already running
+      tmux_status  = Status.new
+      unless @yml.has_key? "sessions"
+        puts "No sessions to load"
+        return
+      end
+      @yml["sessions"].each do |session|
+        window_count = tmux_status.window_count session["name"]
+        session["windows"].each do |window|
+          debugger
+          if tmux_status.find session["name"], window["name"]
+            puts "Window #{session['name']}:#{window['name']} already loaded"
+          else
+            window_count += 1
+            if tmux_status.find session["name"]
+              cmd_out = `tmux new-window -d -t#{session["name"]}:#{window_count} -n #{window["name"]}`
+            else
+              cmd_out = `tmux new-session -d -n #{window["name"]} -s #{session["name"]}`
+            end
+            puts "  window: #{window["name"]}"
+            window["commands"].each do |command|
+              cmd_out = %x[tmux send-keys -t#{session["name"]}:#{window["name"]}.0 '#{}' C-m]
+            end
+            pane_count = 0
+            window["panes"].each do |pane|
+              pane_count += 1
+              cmd_out = `tmux split-window #{pane["options"]} -t#{session["name"]}:#{window["name"]}`
+              pane["commands"].each do |command|
+                cmd_out = %x[tmux send-keys -t#{session["name"]}:#{window["name"]}.#{pane_count} '#{command}' C-m]
+              end
+            end
+          end
+        end
+      end
     end
   end
   class Log
@@ -60,9 +95,17 @@ module FortMux
         session
       end
     end
+    def window_count(sessionName)
+      session = find sessionName
+      if session && session.has_key?(:windows)
+        session[:windows].length
+      else
+        0
+      end
+    end
     def initialize
       @sessions = []
-      # server not found: No such file or directory
+      # server not found: No such file or directory # on stderr, not stdout
       listSessions = `tmux list-sessions`
       if listSessions.length == 0
         return
