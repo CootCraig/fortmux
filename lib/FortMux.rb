@@ -29,9 +29,9 @@ module FortMux
         return
       end
       @yml["sessions"].each do |session|
+        debugger
         window_count = tmux_status.window_count session["name"]
         session["windows"].each do |window|
-          debugger
           if tmux_status.find session["name"], window["name"]
             puts "Window #{session['name']}:#{window['name']} already loaded"
           else
@@ -43,12 +43,14 @@ module FortMux
             end
             puts "  window: #{window["name"]}"
             window["commands"].each do |command|
-              cmd_out = %x[tmux send-keys -t#{session["name"]}:#{window["name"]}.0 '#{}' C-m]
+              cmd_out = %x[tmux send-keys -t#{session["name"]}:#{window["name"]}.0 '#{command}' C-m]
             end
             pane_count = 0
             window["panes"].each do |pane|
               pane_count += 1
+              puts "  tmux split-window #{pane["options"]} -t#{session["name"]}:#{window["name"]}"
               cmd_out = `tmux split-window #{pane["options"]} -t#{session["name"]}:#{window["name"]}`
+              cmd_out = %x[tmux select-pane -t #{session["name"]}:#{window["name"]}.#{pane_count}]
               pane["commands"].each do |command|
                 cmd_out = %x[tmux send-keys -t#{session["name"]}:#{window["name"]}.#{pane_count} '#{command}' C-m]
               end
@@ -90,7 +92,7 @@ module FortMux
     def find(sessionName,windowName=nil)
       session = @sessions.detect { |s| s[:session].downcase == sessionName.downcase }
       if session && windowName
-        session.windows.detect { |w| w[:window].downcase == windowName.downcase }
+        session[:windows].detect { |w| w[:window].downcase == windowName.downcase }
       else
         session
       end
