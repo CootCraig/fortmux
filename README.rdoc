@@ -3,7 +3,7 @@
 Description goes here.
 
 == Contributing to FortMux
- 
+
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
 * Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it
 * Fork the project
@@ -16,4 +16,8 @@ Description goes here.
 
 Copyright (c) 2011 Craig H Anderson. See LICENSE.txt for
 further details.
+
+== To Do
+* Add rescue clause to all the commands
+* Add to logging, Add a log section in load with all the commands issued
 
