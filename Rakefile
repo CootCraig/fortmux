@@ -13,7 +13,7 @@ require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "FortMux"
-  gem.homepage = "http://github.com/CootCraig/FortMux"
+  gem.homepage = "https://github.com/CootCraig/fortmux"
   gem.license = "MIT"
   gem.summary = %Q{Load sessions/windows/panes into tmux from a config file}
   gem.description = %Q{Load sessions/windows/panes into tmux from a config file}
