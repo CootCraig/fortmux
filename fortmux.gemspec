@@ -27,6 +27,7 @@ Gem::Specification.new do |s|
     "Rakefile",
     "VERSION",
     "bin/fortmux",
+    "fortmux.gemspec",
     "lib/FortMux.rb",
     "test/helper.rb",
     "test/test_FortMux.rb"
