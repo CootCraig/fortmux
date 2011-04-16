@@ -15,8 +15,8 @@ Jeweler::Tasks.new do |gem|
   gem.name = "FortMux"
   gem.homepage = "http://github.com/CootCraig/FortMux"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{Load sessions/windows/panes into tmux from a config file}
+  gem.description = %Q{Load sessions/windows/panes into tmux from a config file}
   gem.email = "craig@coot.net"
   gem.authors = ["Craig H Anderson"]
   # Include your dependencies below. Runtime dependencies are required when using your gem,
