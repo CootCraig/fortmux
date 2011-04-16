@@ -31,7 +31,7 @@ Gem::Specification.new do |s|
     "test/helper.rb",
     "test/test_FortMux.rb"
   ]
-  s.homepage = %q{http://github.com/CootCraig/FortMux}
+  s.homepage = %q{https://github.com/CootCraig/fortmux}
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.5.2}
