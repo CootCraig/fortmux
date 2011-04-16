@@ -29,7 +29,6 @@ module FortMux
         return
       end
       @yml["sessions"].each do |session|
-        debugger
         window_count = tmux_status.window_count session["name"]
         session["windows"].each do |window|
           if tmux_status.find session["name"], window["name"]
